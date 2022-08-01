@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>生成日报</title>
+  <style>
+    .content{
+      display: flex;
+      justify-content: center;
+      align-content: flex-start;
+      align-items: center;
+      flex-direction: column;
+    }
+    .btn{
+      height: 30px;
+      margin-right: 8px;
+      margin-bottom: 12px;
+      border-radius: 3px;
+      border: 1px solid #1890ff;
+      color: #fff;
+      background-color: #1890ff;
+      text-shadow: 0 -1px 0 rgb(0 0 0 / 12%);
+      box-shadow: 0 2px 0 rgb(0 0 0 / 5%);
+    }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <br>
+    <div>
+      <textarea id="story" name="story" rows="6" cols="33"></textarea>
+    </div>
+    <br>
+    <div>
+      <button class="btn" type="submit" onclick="generateDailyReport()">
+        <strong>生成日报</strong>
+      </button>
+      <button class="btn" type="submit" onclick="copyToClipBoard()">
+        <strong>复制日报</strong>
+      </button>
+    </div>
+    <br>
+    <div id="res"></div>
+ </div>
+</body>
+<script type="text/javascript">
+  let name = '刘佩鑫'
+  let project = '数字化研发'
+  function padTo2Digits(num) {
+  return num.toString().padStart(2, '0');
+  }
+  function formatDate(date = new Date()) {
+    return [
+      date.getFullYear(),
+      padTo2Digits(date.getMonth() + 1),
+      padTo2Digits(date.getDate()),
+    ].join('');
+  }
+  let generateDailyReport = function () {
+    let content =  document.getElementById("story").value;
+    let date = new Date()
+    let weekday = new Array("星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六")
+    let res = name + '-' + formatDate() + '-' + '工作日报' + '-' + weekday[date.getDay()] + '<br>' + project
+    let text = content.split('\n')
+    text.forEach(function(item, index){
+      if(item.length !== 0){
+        res += '<br>' + (index+1) + '.' + item
+      }
+    })
+    document.getElementById("res").innerHTML = res
+  }
+  function copyToClipBoard() {
+    let text = document.getElementById("res").innerText
+    var textareaC = document.createElement('textarea');
+    textareaC.setAttribute('readonly', 'readonly'); //设置只读属性防止手机上弹出软键盘
+    textareaC.value = text;
+    document.body.appendChild(textareaC); //将textarea添加为body子元素
+    textareaC.select();
+    let res = document.execCommand('copy');
+    document.body.removeChild(textareaC);//移除DOM元素
+    return res;
+  }
+</script>
+</html>
